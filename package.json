@@ -4,17 +4,13 @@
   "description": "my first project",
   "main": "server.js",
   "scripts": {
-    "start": "server.js"
+    "start": "node server.js"
   },
   "keywords": [
     "nodejs",
     "mongdb",
     "npm"
   ],
-  "engines": {
-    "node": ">=10.0.0",
-    "npm": ">=6.0.0"
-  },
   "author": "Ogefere Ogheneruno",
   "license": "ISC",
   "dependencies": {
