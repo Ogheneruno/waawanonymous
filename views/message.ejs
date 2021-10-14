@@ -1,0 +1,21 @@
+
+<% if (success_message && success_message.length > 0) { %>
+
+    <div class="alert alert-primary alert-success just-go" role="alert">
+        <%= success_message %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+<% } %>
+
+
+<% if (error_message && error_message.length > 0) { %>
+
+    <div class="alert alert-primary alert-error just-go" role="alert">
+        <%= error_message %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+<% } %>
