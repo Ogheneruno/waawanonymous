@@ -196,7 +196,7 @@ app.post('/campaign/create-campaign', isLoggedIn, async (req, res) => {
 });
 
 app.get('/campaign/single-campaign/:campaignId', async (req, res) => {
-    const singleCampaign = await Campaign.findOne({link: `http://localhost:5040/campaign/single-campaign/${req.params.campaignId}`})
+    const singleCampaign = await Campaign.findOne({link: `${req.headers.origin}/campaign/single-campaign/${req.params.campaignId}`})
     .populate('user');
 
     if (!singleCampaign) {
