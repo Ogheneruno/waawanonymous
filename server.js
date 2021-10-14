@@ -196,9 +196,8 @@ app.post('/campaign/create-campaign', isLoggedIn, async (req, res) => {
 });
 
 app.get('/campaign/single-campaign/:campaignId', async (req, res) => {
-    const singleCampaign = await Campaign.findOne({link: `${req.headers.origin}/campaign/single-campaign/${req.params.campaignId}`})
-    .populate('user');
-
+    let campaignLink = `https://${req.headers.host}/campaign/single-campaign/${req.params.campaignId}`
+    const singleCampaign = await Campaign.findOne({link: campaignLink})
     if (!singleCampaign) {
         req.flash('error-message', 'Invalid campaign link');
         return res.redirect('/user/login');
