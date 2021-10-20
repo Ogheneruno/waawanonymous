@@ -196,7 +196,7 @@ app.post('/campaign/create-campaign', isLoggedIn, async (req, res) => {
 });
 
 app.get('/campaign/single-campaign/:campaignId', async (req, res) => {
-    let campaignLink = `http://${req.headers.host}/campaign/single-campaign/${req.params.campaignId}`
+    let campaignLink = `https://${req.headers.host}/campaign/single-campaign/${req.params.campaignId}`
     // console.log(req.headers)
     const singleCampaign = await Campaign.findOne({link: campaignLink})
     .populate('user');
