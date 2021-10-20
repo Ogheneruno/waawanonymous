@@ -2,7 +2,7 @@ const {globalvariables} = require("./config/configuration");
 const express = require('express');
 const path = require('path');
 const ejs = require('ejs');
-const port = process.env.PORT || 5080;
+const port = process.env.PORT || 5040;
 const mongoose = require('mongoose');
 const Message = require('./models/Message');
 const User = require('./models/User');
@@ -154,10 +154,10 @@ app.get('/user/login', (req, res) => {
 });
 
 app.get('/user/profile', isLoggedIn, async (req, res) => {
-    let loggedUser = req.user;
-    let userCampaigns = await Campaign.find({ loggedUser })
+    let loggedUser = req.user._id;
+    let userCampaigns = await Campaign.find({ user: loggedUser })
     .populate('user messages');
-    console.log(userCampaigns)
+    // console.log(userCampaigns)
     res.render('profile', {userCampaigns});
 })
 
@@ -196,7 +196,9 @@ app.post('/campaign/create-campaign', isLoggedIn, async (req, res) => {
 });
 
 app.get('/campaign/single-campaign/:campaignId', async (req, res) => {
-    const singleCampaign = await Campaign.findOne({link: `http://localhost:5040/campaign/single-campaign/${req.params.campaignId}`})
+    let campaignLink = `http://${req.headers.host}/campaign/single-campaign/${req.params.campaignId}`
+    // console.log(req.headers)
+    const singleCampaign = await Campaign.findOne({link: campaignLink})
     .populate('user');
 
     if (!singleCampaign) {
@@ -204,7 +206,7 @@ app.get('/campaign/single-campaign/:campaignId', async (req, res) => {
         return res.redirect('/user/login');
     }
 
-    console.log(singleCampaign)
+    // console.log(singleCampaign.user.fullName)
 
     res.render('campaignMessage', {singleCampaign})
 
@@ -245,15 +247,29 @@ app.post('/campaign/campaign-message/:campaignId', async (req, res, next) => {
     });
 });
 
+app.get('/campaign/single-campaign/user/login', (req, res) => {
+    res.redirect('/user/login')
+});
+
 //delete messages
-app.get('/campaign/campaign-message/:campaignId', async (req, res) => {
+app.get('/messages/delete-message/:campaignId', async (req, res) => {
     const {campaignId} = req.params;
 
     const deletedMsg = await Message.findByIdAndDelete(campaignId);
     if (!deletedMsg) {
         req.flash('success-message', 'Campaign message deleted successfully');
         res.redirect('back');
+    } else {
+        req.flash ('error-message', 'Unable to delete message');
+        res.redirect('back');
     }
+});
+
+// delete campaign
+app.get('/campaigns/delete-campaign/:campaignId', async function (req, res) {
+    const {campaignId} = req.params;
+    const deleteCampaign = await Campaign.findByIdAndDelete(campaignId);
+    res.redirect('back');
 });
 
 app.get('/user/logout', (req, res) => {
